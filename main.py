@@ -22,36 +22,30 @@ class BooksCollector:
 
     # выводим список книг с определённым жанром
     def get_books_with_specific_genre(self, genre):
-        books_with_specific_genre = []
-        if self.books_genre and genre in self.genre:
-            for name, book_genre in self.books_genre.items():
-                if book_genre == genre:
-                    books_with_specific_genre.append(name)
-        return books_with_specific_genre
+        result = []
+        for key, value in self.books_genre.items():
+            if self.books_genre[key] == genre:
+                result.append(key)
+        return result
 
-    # получаем словарь books_genre
-    def get_books_genre(self):
-        return self.books_genre
-
-    # возвращаем книги, подходящие детям
+    # метод для детей: исключаем по возрастному рейтингу
     def get_books_for_children(self):
-        books_for_children = []
+        result = []
         for name, genre in self.books_genre.items():
-            if genre not in self.genre_age_rating and genre in self.genre:
-                books_for_children.append(name)
-        return books_for_children
+            if genre not in self.genre_age_rating:
+                result.append(name)
+        return result
 
-    # добавляем книгу в Избранное
+    # добавляем в избранное
     def add_book_in_favorites(self, name):
-        if name in self.books_genre:
-            if name not in self.favorites:
-                self.favorites.append(name)
+        if name in self.books_genre and name not in self.favorites:
+            self.favorites.append(name)
 
-    # удаляем книгу из Избранного
+    # удаляем из избранного
     def delete_book_from_favorites(self, name):
         if name in self.favorites:
             self.favorites.remove(name)
 
-    # получаем список Избранных книг
+    # получаем список избранных книг
     def get_list_of_favorites_books(self):
         return self.favorites

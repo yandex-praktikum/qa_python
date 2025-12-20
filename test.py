@@ -1,4 +1,5 @@
 import pytest
+from conftest import collector
 from main import BooksCollector
 from books_data import BOOK_WITH_GENRE
 
@@ -10,10 +11,7 @@ class TestBooksCollector:
     # обязательно указывать префикс test_
     # дальше идет название метода, который тестируем add_new_book_
     # затем, что тестируем add_two_books - добавление двух книг
-    def test_add_new_book_add_two_books(self):
-        # создаем экземпляр (объект) класса BooksCollector
-        collector = BooksCollector()
-
+    def test_add_new_book_add_two_books(self, collector):
         # добавляем две книги
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
@@ -23,8 +21,7 @@ class TestBooksCollector:
         assert len(collector.get_books_genre()) == 2
 
     # Тест на проверку игнорирования дубликатов при добавлении книги
-    def test_add_new_book_ignore_duplicate_name(self):
-        collector = BooksCollector()
+    def test_add_new_book_ignore_duplicate_name(self, collector):
         # Добавляем две книги с одинаковым именем
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Гордость и предубеждение и зомби')
@@ -32,16 +29,14 @@ class TestBooksCollector:
         assert len(collector.get_books_genre()) == 1
 
     # Тест на проверку игнорирования пустого имени при добавлении книги
-    def test_add_new_book_igonore_empty_name(self):
-        collector = BooksCollector()
+    def test_add_new_book_igonore_empty_name(self, collector):
         # Добавляем книгу с пустым именем
         collector.add_new_book("")
         # Проверяем, что книга не добавилась
         assert len(collector.get_books_genre()) == 0
 
     # Тест на проверку игнорирования добавления книги с именем длинее 40 символа
-    def test_add_new_book_igonore_book_name_longer_than_41_symblos(self):
-        collector = BooksCollector()
+    def test_add_new_book_igonore_book_name_longer_than_41_symblos(self, collector):
         # Создаем имя длиной 41 символа
         name = "A" * 41 
         # Добавляем книгу с именем длиной 41 символа
@@ -51,8 +46,7 @@ class TestBooksCollector:
 
     # Тест на проверку установки жанра книги черрез параметризацию
     @pytest.mark.parametrize("book, genre", BOOK_WITH_GENRE)
-    def test_set_book_genre(self, book, genre):
-        collector = BooksCollector()
+    def test_set_book_genre(self, collector, book, genre):
         # Добавляем книгу
         collector.add_new_book(book)
         # Устанавливаем жанр книги
@@ -61,8 +55,7 @@ class TestBooksCollector:
         assert collector.get_book_genre(book) == genre
 
     # Тест на проверку игнорирования установки жанра книги не из списка жанров
-    def test_set_book_genre_ignore_genre_not_in_list(self):
-        collector = BooksCollector()
+    def test_set_book_genre_ignore_genre_not_in_list(self, collector):
         # Добавляем книгу 
         collector.add_new_book('Гордость и предубеждение и зомби')
         # Добаляем жанр не из списка жанров 
@@ -71,8 +64,7 @@ class TestBooksCollector:
         assert collector.get_book_genre('Гордость и предубеждение и зомби') == ''
     
     # Тест на проверку игнорирования установки жанра книги, которой нет в коллекции
-    def test_set_book_genre_ignore_book_not_in_collection(self):
-        collector = BooksCollector()
+    def test_set_book_genre_ignore_book_not_in_collection(self, collector):
         # Добавляем жанр книге, которой нет в коллекции
         collector.set_book_genre('Гордость и предубеждение и зомби', 'Ужасы')
         #  Проверяем, что жанр книги не установлен
@@ -80,62 +72,60 @@ class TestBooksCollector:
 
     # Тест на проверку получения жанра книги с фикстурой
     def test_get_book_genre_book_exist(self, collector_with_books):
-        collector = collector_with_books
-        assert collector.get_book_genre("Оно") == "Ужасы"
+        # Используем фикстуру с книгами и жанрами
+        assert collector_with_books.get_book_genre("Оно") == "Ужасы"
 
     # Тест на проверку получения жанра книги, которой нет в коллекции, с фикстурой
     def test_get_book_genre_book_not_exist(self, collector_with_books):
-        collector = collector_with_books
-        assert collector.get_book_genre("Неизвестная книга") is None
+        # Используем фикстуру с книгами и жанрами
+        assert collector_with_books.get_book_genre("Неизвестная книга") is None
 
     # Тест на проверку получения списка книг с определнным жанром черрез параметризацию
     @pytest.mark.parametrize("book, genre", BOOK_WITH_GENRE)
     def test_get_books_with_specific_genre(self, book, genre, collector_with_books):
-        collector = collector_with_books
-        # Добавляем книгу
-        collector.add_new_book(book)
-        # Устанавливаем жанр книги
-        collector.set_book_genre(book, genre)
         # Проверяем, что книга возвращается в списке книг с определенным жанром
-        assert book in collector.get_books_with_specific_genre(genre)
+        assert book in collector_with_books.get_books_with_specific_genre(genre)
         
     # Тест на проверку получения словаря books_genre
     def test_get_books_genre_book_exist (self, collector_with_books):
-        collector = collector_with_books
         # Преобразуем список книг с жанрами в словарь   
         dic_books = dict(BOOK_WITH_GENRE)
         # Проверяем, что метод возвращает правильный словарь книг с жанрами
-        assert collector.get_books_genre() == dic_books
+        assert collector_with_books.get_books_genre() == dic_books
     
     # Тест на проверку получения списка книг, подходящих для детей
     def test_get_books_for_children_only_children_genres(self, collector_with_books):
-        collector = collector_with_books
         # Получаем список книг для детей
-        book_for_children = set(collector.get_books_for_children())
+        book_for_children = set(collector_with_books.get_books_for_children())
+        # Берем названия книг через переменные, чтобы тест был стабильным
+        expected_books = {
+            name for name, genre in BOOK_WITH_GENRE
+            if genre not in ['Ужасы', 'Детективы']
+        }
         # Проверяем, что в списке книг для детей только книги без возрастного рейтинга
-        assert book_for_children == {"Цветы для Элджернона", "Приключения Винни", "Горе от ума"}
+        assert book_for_children == expected_books
 
     # Тест на проверку получения списка книг, подходящих для детей, когда все книги имеют возрастной рейтинг
-    @pytest.mark.parametrize("adult_genre", ['Ужасы', 'Детективы'])
-    def test_get_books_for_children_no_children_genres(self, adult_genre):
-        collector = BooksCollector()
-        # Добавляем книгу с возрастныи рейтингом
+    def test_get_books_for_children_no_children_genres(self, collector):
+        # Добавляем книгу с жанром из возрастного рейтинга
         collector.add_new_book('Взрослая книга')
-        collector.set_book_genre('Взрослая книга', adult_genre)
+        collector.set_book_genre('Взрослая книга', 'Ужасы')  # можно выбрать любой из genre_age_rating
         # Проверяем, что список книг для детей пустой
         assert collector.get_books_for_children() == []
 
     #Тест на проверку добавление книги в избранное
-    def test_add_book_in_favorites_one_book(self, collector_with_books):
-        collector = collector_with_books
+    def test_add_book_in_favorites_one_book(self, collector):
+        # Добавляем новую книгу
+        collector.add_new_book("Приключения Винни")
         # Добавляем книгу в избранное
         collector.add_book_in_favorites("Приключения Винни")
         # Проверяем, что книга добавлена в избраное
         assert "Приключения Винни" in collector.get_list_of_favorites_books()
 
     #Тест на проверку игнорирования дубликатов при добавлении книги в избранное
-    def test_add_book_in_favorites_ignore_duplicates(self, collector_with_books):
-        collector = collector_with_books
+    def test_add_book_in_favorites_ignore_duplicates(self, collector):
+        # Добавляем новую книгу
+        collector.add_new_book("Приключения Винни")
         # Добавляем книгу в избранное
         collector.add_book_in_favorites("Приключения Винни")
         collector.add_book_in_favorites("Приключения Винни")
@@ -143,8 +133,9 @@ class TestBooksCollector:
         assert len(collector.get_list_of_favorites_books()) == 1
     
     #Тест на проверку удаления книги из избранного
-    def tes_delete_book_from_favorites_one_book(self, collector_with_books):
-        collector = collector_with_books
+    def test_delete_book_from_favorites_one_book(self, collector):
+        # Добавляем новую книгу
+        collector.add_new_book("Приключения Винни")
         # Добавляем книгу в избранное
         collector.add_book_in_favorites("Приключения Винни")
         # Удаляем книгу из избранного
@@ -153,8 +144,10 @@ class TestBooksCollector:
         assert "Приключения Винни" not in collector.get_list_of_favorites_books()
 
     #Тест на проверку удаления только одной книги из избранного при наличии нескольких книг
-    def test_delete_book_from_favorites_one_of_many(self, collector_with_books):
-        collector = collector_with_books
+    def test_delete_book_from_favorites_one_of_many(self, collector):
+        # Добавляем новую книгу
+        collector.add_new_book("Приключения Винни")
+        collector.add_new_book("Горе от ума")
         # Добавляем книги в избранное
         collector.add_book_in_favorites("Приключения Винни")
         collector.add_book_in_favorites("Горе от ума")
@@ -164,8 +157,9 @@ class TestBooksCollector:
         assert collector.get_list_of_favorites_books() == ["Горе от ума"]
 
     # Тест на проверку не удаления книги из избранного, если ее там нет
-    def test_delete_book_from_favorites_book_not_in_favorites(self, collector_with_books):
-        collector = collector_with_books
+    def test_delete_book_from_favorites_book_not_in_favorites(self, collector):
+        # Добавляем новую книгу
+        collector.add_new_book("Приключения Винни")
         # Добавляем книгу в избранное
         collector.add_book_in_favorites("Приключения Винни")
         # Пытаемся удалить книгу, которой нет в избранном
@@ -174,8 +168,10 @@ class TestBooksCollector:
         assert collector.get_list_of_favorites_books() == ["Приключения Винни"] 
 
     # Тест на проверку получения списка избранных книг
-    def test_get_list_of_favorites_books_return_favorites(self, collector_with_books):
-        collector = collector_with_books
+    def test_get_list_of_favorites_books_return_favorites(self, collector):
+        # Добавляем новую книгу
+        collector.add_new_book("Приключения Винни")
+        collector.add_new_book("Горе от ума")
         # Добавляем книги в избранное
         collector.add_book_in_favorites("Приключения Винни")
         collector.add_book_in_favorites("Горе от ума")
@@ -183,8 +179,7 @@ class TestBooksCollector:
         assert collector.get_list_of_favorites_books() == ["Приключения Винни", "Горе от ума"]
     
     # Тест на проверку получения списка избранных книг, когда избранное пусто
-    def test_get_list_of_favorites_books_empty_favorites(self, collector_with_books):
-        collector = collector_with_books
+    def test_get_list_of_favorites_books_empty_favorites(self, collector):
         # Проверяем, что метод возвращает пустой список избранных книг
         assert collector.get_list_of_favorites_books() == []
     

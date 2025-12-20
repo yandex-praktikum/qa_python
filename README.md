@@ -37,7 +37,7 @@
 ### 5. Работа с «Избранным» (`favorites`)
 * **test_add_book_in_favorites_one_book**: Проверка успешного добавления книги в список избранного.
 * **test_add_book_in_favorites_ignore_duplicates**: Проверка защиты от повторного добавления одной и той же книги в избранное.
-* **tes_delete_book_from_favorites_one_book**: Проверка удаления единственной книги из избранного.
+* **test_delete_book_from_favorites_one_book**: Проверка удаления единственной книги из избранного.
 * **test_delete_book_from_favorites_one_of_many**: Проверка точечного удаления: при удалении одной книги остальные должны остаться в списке.
 * **test_delete_book_from_favorites_book_not_in_favorites**: Проверка того, что попытка удаления книги, которой нет в избранном, не вызывает ошибок и не меняет список.
 * **test_get_list_of_favorites_books_return_favorites**: Проверка получения полного списка избранных книг.

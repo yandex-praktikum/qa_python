@@ -73,8 +73,10 @@ class TestBooksCollector:
 
     # Тест на проверку получения жанра книги с фикстурой
     def test_get_book_genre_book_exist(self, collector_with_books):
-        # Используем фикстуру с книгами и жанрами
-        assert collector_with_books.get_book_genre("Оно") == "Ужасы"
+        # Берем первую книгу и жанр из тестовых данных
+        book, genre = BOOK_WITH_GENRE[0]
+        # Проверяем, что жанр книги установлен корректно
+        assert collector_with_books.get_book_genre(book) == genre
 
     # Тест на проверку получения жанра книги, которой нет в коллекции, с фикстурой
     def test_get_book_genre_book_not_exist(self, collector_with_books):

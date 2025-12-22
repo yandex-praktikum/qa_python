@@ -10,8 +10,7 @@ def collector():
 
 # Фикстура для создания экземпляра BooksCollector с предзаполненными книгами и жанрами
 @pytest.fixture
-def collector_with_books():
-    collector = BooksCollector()
+def collector_with_books(collector):
     for name, genre in BOOK_WITH_GENRE:
         collector.add_new_book(name)
         collector.set_book_genre(name, genre)

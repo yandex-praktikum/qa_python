@@ -2,6 +2,7 @@ import pytest
 from conftest import collector
 from main import BooksCollector
 from books_data import BOOK_WITH_GENRE
+from books_data import BOOK_FOR_CHILDREN
 
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
 # обязательно указывать префикс Test
@@ -9,7 +10,7 @@ class TestBooksCollector:
 
     # пример теста:
     # обязательно указывать префикс test_
-    # дальше идет название метода, который тестируем add_new_book_
+    # дальше идет название метода, который тестируем add_new_book_п
     # затем, что тестируем add_two_books - добавление двух книг
     def test_add_new_book_add_two_books(self, collector):
         # добавляем две книги
@@ -97,13 +98,8 @@ class TestBooksCollector:
     def test_get_books_for_children_only_children_genres(self, collector_with_books):
         # Получаем список книг для детей
         book_for_children = set(collector_with_books.get_books_for_children())
-        # Берем названия книг через переменные, чтобы тест был стабильным
-        expected_books = {
-            name for name, genre in BOOK_WITH_GENRE
-            if genre not in ['Ужасы', 'Детективы']
-        }
         # Проверяем, что в списке книг для детей только книги без возрастного рейтинга
-        assert book_for_children == expected_books
+        assert book_for_children == set(BOOK_FOR_CHILDREN)
 
     # Тест на проверку получения списка книг, подходящих для детей, когда все книги имеют возрастной рейтинг
     def test_get_books_for_children_no_children_genres(self, collector):

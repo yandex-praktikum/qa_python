@@ -6,6 +6,9 @@ class BooksCollector:
         self.genre = ['Фантастика', 'Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
         self.genre_age_rating = ['Ужасы', 'Детективы']
 
+    def get_books_rating(self):
+        return self.books_genre
+        
     # добавляем новую книгу
     def add_new_book(self, name):
         if not self.books_genre.get(name) and 0 < len(name) < 41:

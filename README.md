@@ -1,1 +1,40 @@
 # qa_python
+
+
+Тесты для BooksCollector
+
+add_new_book
+test_add_new_book_added_successfully — книга добавляется успешно
+test_add_new_book_parametrized — граничные значения (40 символов, 41 символ, обычное название, пустая строка)
+test_add_new_book_duplicate_not_added_twice — дубликат не добавляется
+test_add_new_book_default_genre_is_empty_string — жанр по умолчанию пустая строка
+
+set_book_genre
+test_set_book_genre_sets_correctly — жанр устанавливается успешно
+test_set_book_genre_not_set_if_book_missing — книги нет в словаре
+test_set_book_genre_not_set_if_genre_not_in_list — жанр не из списка
+
+get_book_genre
+test_get_book_genre_returns_genre — возвращает установленный жанр
+test_get_book_genre_returns_empty_string_if_genre_not_set — возвращает пустую строку если жанр не задан
+
+get_books_with_specific_genre
+test_get_books_with_specific_genre_returns_correct_books — возвращает правильные книги
+test_get_books_with_specific_genre_returns_empty_list_if_no_books — возвращает пустой список
+
+get_books_for_children
+test_get_books_for_children_returns_books_without_age_rating — книга без возрастного рейтинга попадает в список
+test_get_books_for_children_excludes_books_with_age_rating — книга с возрастным рейтингом не попадает
+test_get_books_for_children_excludes_books_without_genre — книга без жанра не попадает в список
+
+add_book_in_favorites
+test_add_book_in_favorites_added_successfully — книга добавляется в избранное
+test_add_book_in_favorites_not_added_if_book_not_in_books_genre — книги нет в словаре
+test_add_book_in_favorites_not_added_twice — дубликат не добавляется
+
+delete_book_from_favorites
+test_delete_book_from_favorites_deleted_successfully — книга удаляется из избранного
+test_delete_book_from_favorites_no_error_if_book_not_in_favorites — нет ошибки если книги нет в избранном
+
+get_list_of_favorites_books
+test_get_list_of_favorites_books_returns_correct_list — возвращает корректный список
